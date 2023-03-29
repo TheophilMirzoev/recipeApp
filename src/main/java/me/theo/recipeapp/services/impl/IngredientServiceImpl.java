@@ -9,7 +9,7 @@ import java.util.Map;
 public class IngredientServiceImpl {
     private static int id;
 
-    Map<Integer, Ingredient> ingredientMap;
+    private Map<Integer, Ingredient> ingredientMap;
 
     public Ingredient addIngredient(Ingredient ingredient) {
       ingredientMap.put(id++, ingredient);
@@ -17,7 +17,7 @@ public class IngredientServiceImpl {
         return ingredient;
     }
 
-    public Ingredient gettingIngredient(Integer integer) {
+    public Ingredient getIngredient(Integer integer) {
      return ingredientMap.get(integer);
     }
 }

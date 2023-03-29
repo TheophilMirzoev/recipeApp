@@ -5,18 +5,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 @Service
-public class RecipeServiceImpl implements me.theo.recipeapp.services.Service {
+public class RecipeServiceImpl {
 
     private static int id;
-    Map<Integer, Recipe> recipeMap;
-    @Override
-    public Recipe addNewRecipe(Recipe recipe) {
+    private Map<Integer, Recipe> recipeMap;
+    public Recipe addRecipe(Recipe recipe) {
       recipeMap.put(id++, recipe);
         return recipe;
     }
 
-    @Override
-    public Recipe gettingRecipe(Integer integer) {
+    public Recipe getRecipe(Integer integer) {
       return recipeMap.get(integer);
     }
 
