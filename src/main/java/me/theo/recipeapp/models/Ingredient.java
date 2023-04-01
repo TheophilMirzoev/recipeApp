@@ -14,6 +14,6 @@ public class Ingredient {
 
 
     private String ingredientName;
-    private int numberOfIngredients;
+    private int weight;
     private String unitOfMeasurement;
 }

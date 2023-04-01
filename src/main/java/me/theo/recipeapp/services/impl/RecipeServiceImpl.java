@@ -3,22 +3,32 @@ package me.theo.recipeapp.services.impl;
 import me.theo.recipeapp.models.Recipe;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 @Service
 public class RecipeServiceImpl {
 
     private static int id;
-    private Map<Integer, Recipe> recipeMap;
+    private Map<Integer, Recipe> recipeMap = new HashMap<>();
     public Recipe addRecipe(Recipe recipe) {
       recipeMap.put(id++, recipe);
         return recipe;
     }
 
     public Recipe getRecipe(Integer integer) {
-      return recipeMap.get(integer);
+        return recipeMap.get(integer);
+    }
+    public Recipe editRecipe(Integer id, Recipe recipe) {
+        Recipe recipe1 = recipeMap.get(id);
+        recipe1.setRecipeName(recipe.getRecipeName());
+        return recipe1;
     }
 
-    // создать сервис, который будет хранить рецепты и возвращать рецепты по его идентификатору.
-    // карте в формате <номер рецепта, рецепт>
+    public Recipe deleteRecipe(Integer id) {
+        Recipe recipe = recipeMap.remove(id);
+        return recipe;
+    }
+
+
 
 }
