@@ -1,6 +1,7 @@
 package me.theo.recipeapp.services.impl;
 
 import me.theo.recipeapp.models.Recipe;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,8 +21,11 @@ public class RecipeServiceImpl {
     }
     public Recipe editRecipe(Integer id, Recipe recipe) {
         Recipe recipe1 = recipeMap.get(id);
-        recipe1.setRecipeName(recipe.getRecipeName());
-        return recipe1;
+        if (StringUtils.isBlank(recipe.getRecipeName())) {
+            recipe1.setRecipeName(recipe.getRecipeName());
+            return recipe1;
+        }
+        return null;
     }
 
     public Recipe deleteRecipe(Integer id) {
