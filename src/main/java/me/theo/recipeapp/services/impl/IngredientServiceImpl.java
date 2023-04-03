@@ -4,10 +4,7 @@ import me.theo.recipeapp.models.Ingredient;
 import me.theo.recipeapp.models.Recipe;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -23,6 +20,12 @@ public class IngredientServiceImpl {
 
     public Ingredient getIngredient(Integer id) {
      return ingredientMap.get(id);
+    }
+
+    public List<Ingredient> getAllIngredient() {
+        List<Ingredient> ingredientList = new ArrayList<>();
+        ingredientList.addAll(ingredientMap.values());
+        return ingredientList;
     }
 
     public Ingredient editIngredient(Integer id, Ingredient ingredient) {

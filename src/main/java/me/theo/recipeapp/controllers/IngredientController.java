@@ -48,6 +48,15 @@ public class IngredientController {
         }
         return ResponseEntity.ok(ingredient);
     }
+    @GetMapping("/all")
+    @Operation(summary = "получить все ингредиенты", description = "все ингредиенты")
+    public ResponseEntity<List<Ingredient>> getAllIngredient() {
+        List<Ingredient> ingredientList = ingredientService.getAllIngredient();
+        if (ingredientList == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ingredientList);
+    }
 
     @PutMapping("/{id}")
     @Operation(summary = "редактирование ингредиента",description = "редактирование ингредиента по id, через тело запроса")

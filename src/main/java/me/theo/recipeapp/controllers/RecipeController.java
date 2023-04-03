@@ -6,8 +6,13 @@ import me.theo.recipeapp.models.Ingredient;
 import me.theo.recipeapp.models.Recipe;
 import me.theo.recipeapp.services.impl.IngredientServiceImpl;
 import me.theo.recipeapp.services.impl.RecipeServiceImpl;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/recipe")
@@ -40,6 +45,17 @@ public class RecipeController {
         }
         return ResponseEntity.ok(recipe);
     }
+
+    @GetMapping("/all")
+    @Operation(summary = "получить все рецепты", description = "все рецепты")
+    public ResponseEntity<List<Recipe>> getAllRecipe() {
+        List<Recipe> recipeList = recipeService.getAllRecipe();
+        if (recipeList == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(recipeList);
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "изменить рецепт",description = "редактирование рецепта по id, через тело запроса")
     public ResponseEntity<Recipe> editRecipe(@PathVariable Integer id, @RequestBody Recipe name) {

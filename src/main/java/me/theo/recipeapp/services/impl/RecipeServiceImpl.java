@@ -2,10 +2,11 @@ package me.theo.recipeapp.services.impl;
 
 import me.theo.recipeapp.models.Recipe;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.el.stream.Stream;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 @Service
 public class RecipeServiceImpl {
 
@@ -18,6 +19,12 @@ public class RecipeServiceImpl {
 
     public Recipe getRecipe(Integer integer) {
         return recipeMap.get(integer);
+    }
+
+    public List<Recipe> getAllRecipe() {
+        List<Recipe> recipeList = new ArrayList<>();
+        recipeList.addAll(recipeMap.values());
+        return recipeList;
     }
     public Recipe editRecipe(Integer id, Recipe recipe) {
         Recipe recipe1 = recipeMap.get(id);
