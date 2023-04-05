@@ -4,36 +4,33 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.theo.recipeapp.models.Ingredient;
-import me.theo.recipeapp.services.FilesService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 @Service
 public class IngredientServiceImpl {
 
     private static int id;
-    final private FilesService filesService;
+    final private FilesIngredientServiceImpl filesIngredientService;
 
     private Map<Integer, Ingredient> ingredientMap = new HashMap<>();
+    public IngredientServiceImpl(FilesIngredientServiceImpl filesIngredientService) {
+        this.filesIngredientService = filesIngredientService;
+    }
 
     @PostConstruct()
     private void init() {
-        try {
+       // try {
             readFromFile();
-        } catch (Exception e) {
-            e.getMessage();
-        }
+        //} catch (Exception e) {
+       //     e.getMessage();
+      //  }
 
     }
 
-    public IngredientServiceImpl(FilesService filesService) {
-        this.filesService = filesService;
-    }
+
 
     public Ingredient addIngredient(Ingredient ingredient) {
       ingredientMap.put(id++, ingredient);
@@ -66,15 +63,14 @@ public class IngredientServiceImpl {
     private void saveToFile() {
         try {
            String json = new ObjectMapper().writeValueAsString(ingredientMap);
-           filesService.saveToFile(json);
+            filesIngredientService.saveToFile(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
     private void readFromFile() {
-       String json = filesService.readFromFile();
+       String json = filesIngredientService.readFromFile();
         if (!(json.isBlank() && json.isEmpty())) {
-
             try {
                 ingredientMap = new ObjectMapper().readValue(json, new TypeReference<HashMap<Integer, Ingredient>>() {
                 });

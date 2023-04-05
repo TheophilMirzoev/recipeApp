@@ -3,9 +3,7 @@ package me.theo.recipeapp.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.theo.recipeapp.models.Ingredient;
 import me.theo.recipeapp.models.Recipe;
-import me.theo.recipeapp.services.FilesService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +13,11 @@ import java.util.*;
 @Service
 public class RecipeServiceImpl {
     private static int id;
-    final private FilesService filesService;
+    final private FilesRecipeServiceImpl filesRecipeServiceImpl;
     private Map<Integer, Recipe> recipeMap = new HashMap<>();
 
-    public RecipeServiceImpl(FilesService filesService) {
-        this.filesService = filesService;
+    public RecipeServiceImpl(FilesRecipeServiceImpl filesRecipeServiceImpl) {
+        this.filesRecipeServiceImpl = filesRecipeServiceImpl;
     }
 
     @PostConstruct()
@@ -55,16 +53,20 @@ public class RecipeServiceImpl {
         Recipe recipe = recipeMap.remove(id);
         return recipe;
     }
+
+//    public Path createRecipeReport(String suffix) {
+//
+//    }
     private void saveToFile() {
         try {
             String json = new ObjectMapper().writeValueAsString(recipeMap);
-            filesService.saveToFile(json);
+            filesRecipeServiceImpl.saveToFile(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
     private void readFromFile() {
-        String json = filesService.readFromFile();
+        String json = filesRecipeServiceImpl.readFromFile();
             try {
                 recipeMap = new ObjectMapper().readValue(json, new TypeReference<HashMap<Integer, Recipe>>() {
                 });
