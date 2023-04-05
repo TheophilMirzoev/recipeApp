@@ -10,6 +10,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class RecipeController {
     public RecipeController(RecipeServiceImpl recipeService) {
         this.recipeService = recipeService;
     }
+
 
     @PostMapping()
     @Operation(summary = "создание рецепта",description = "создание рецепта через тело запроса в json")
