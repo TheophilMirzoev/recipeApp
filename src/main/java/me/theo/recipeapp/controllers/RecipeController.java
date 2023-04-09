@@ -7,10 +7,14 @@ import me.theo.recipeapp.models.Recipe;
 import me.theo.recipeapp.services.impl.IngredientServiceImpl;
 import me.theo.recipeapp.services.impl.RecipeServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,18 @@ public class RecipeController {
         }
         return ResponseEntity.ok(recipe1);
     }
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "импорт рецепта",description = "импорт рецепта из файла")
+    public ResponseEntity<Object> addRecipeFromFile(@RequestParam MultipartFile multipartFile) {
+        try (InputStream stream = multipartFile.getInputStream()) {
+            recipeService.addRecipeFromInputStream(stream);
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.toString());
+        }
+    }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "получить рецепт",description = "получение рецепта по id")

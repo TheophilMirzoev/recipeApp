@@ -3,26 +3,34 @@ package me.theo.recipeapp.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.theo.recipeapp.models.Ingredient;
 import me.theo.recipeapp.models.Recipe;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.*;
 import java.util.*;
 
 @Service
 public class RecipeServiceImpl {
     private static int id;
     final private FilesRecipeServiceImpl filesRecipeServiceImpl;
+    final private IngredientServiceImpl ingredientService;
     private Map<Integer, Recipe> recipeMap = new HashMap<>();
 
-    public RecipeServiceImpl(FilesRecipeServiceImpl filesRecipeServiceImpl) {
+    public RecipeServiceImpl(FilesRecipeServiceImpl filesRecipeServiceImpl, IngredientServiceImpl ingredientService) {
         this.filesRecipeServiceImpl = filesRecipeServiceImpl;
+        this.ingredientService = ingredientService;
     }
 
     @PostConstruct()
     private void init() {
-        readFromFile();
+        try {
+            readFromFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public Recipe addRecipe(Recipe recipe) {
       recipeMap.put(id++, recipe);
@@ -54,15 +62,31 @@ public class RecipeServiceImpl {
         return recipe;
     }
 
-//    public Path createRecipeReport(String suffix) {
-//
-//    }
     private void saveToFile() {
         try {
             String json = new ObjectMapper().writeValueAsString(recipeMap);
             filesRecipeServiceImpl.saveToFile(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void addRecipeFromInputStream(InputStream inputStream) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            List<Ingredient> ingredientList = new ArrayList<>();
+            Map<Integer, String> steps = new HashMap<>();
+            while ((line = reader.readLine()) != null) {
+                String[] array = StringUtils.split(line, '|');
+                ingredientList.add(new Ingredient(String.valueOf(array[0]), Integer.parseInt(array[1]),
+                        String.valueOf(array[2])));
+                steps.put(Integer.parseInt(array[3]), String.valueOf(array[4]));
+                Recipe recipe = new Recipe(String.valueOf(array[5]), Integer.parseInt(array[6]),
+                        ingredientList, steps);
+                addRecipe(recipe);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private void readFromFile() {

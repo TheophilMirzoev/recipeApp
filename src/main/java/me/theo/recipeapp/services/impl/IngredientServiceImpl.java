@@ -22,12 +22,11 @@ public class IngredientServiceImpl {
 
     @PostConstruct()
     private void init() {
-       // try {
-            readFromFile();
-        //} catch (Exception e) {
-       //     e.getMessage();
-      //  }
-
+       try {
+           readFromFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

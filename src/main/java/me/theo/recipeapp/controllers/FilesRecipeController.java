@@ -1,5 +1,6 @@
 package me.theo.recipeapp.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import me.theo.recipeapp.services.impl.FilesRecipeServiceImpl;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
@@ -22,20 +23,32 @@ public class FilesRecipeController {
     }
 
     @GetMapping("/export")
+    @Operation(summary = "файл рецептов",description = "скачать файл со всеми рецептами")
     public ResponseEntity<InputStreamResource> downloadDataFile() throws FileNotFoundException {
         File file = filesRecipeServiceImpl.getDataFile();
         if (file.exists()) {
            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Recipe.json\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Recipe.txt\"")
                     .contentLength(file.length())
                     .body(resource);
         } else {
             return ResponseEntity.noContent().build();
         }
     }
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteRecipe() {
+        try {
+            filesRecipeServiceImpl.cleanDataFile();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "загрузка из файла",description = "загрузка рецепта из файла")
     public ResponseEntity<Void> uploadDataFile(@RequestParam MultipartFile file) {
        filesRecipeServiceImpl.cleanDataFile();
        File dataFile = filesRecipeServiceImpl.getDataFile();

@@ -1,5 +1,6 @@
 package me.theo.recipeapp.services.impl;
 
+import io.swagger.v3.oas.annotations.Operation;
 import me.theo.recipeapp.services.FilesService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Formatter;
 
 @Service
 public class FilesRecipeServiceImpl implements FilesService {
@@ -30,13 +32,6 @@ public class FilesRecipeServiceImpl implements FilesService {
         }
     }
 
-//    public Path createTempFile(String suffix) {
-//        try {
-//           return Files.createTempFile(Path.of(dataFilePath), "tempFile", suffix);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
     @Override
     public String readFromFile() {
            try {
@@ -63,7 +58,6 @@ public class FilesRecipeServiceImpl implements FilesService {
 
     }
     @Override
-
     public File getDataFile() {
         return  new File(dataFilePath + "/" + dataFileName);
     }
