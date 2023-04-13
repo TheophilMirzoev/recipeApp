@@ -30,7 +30,7 @@ public class FilesRecipeController {
            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Recipe.txt\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Recipe.json\"")
                     .contentLength(file.length())
                     .body(resource);
         } else {
@@ -60,4 +60,26 @@ public class FilesRecipeController {
        }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+    @PostMapping(value = "/import/txt", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "загрузка из файла",description = "загрузка рецепта из файла txt")
+    public ResponseEntity<Void> uploadFileTxt(@RequestParam MultipartFile file) {
+        filesRecipeServiceImpl.cleanDataFile();
+        try {
+            filesRecipeServiceImpl.addFileToServer(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
+    //И создать новый эндпоинт, который позволит загрузить файл с расширением .txt.
+    //
+    //
+    //Внутри эндпоинта тебе нужно вызвать метод сервиса (который ты напишешь) который вернёт файл.
+    //
+    //В этот файл тебе нужно записать рецепты в удобном для чтения виде.
+    //
+    //
+    //Подправь эти неточности и присылай работу еще раз!
 }

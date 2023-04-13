@@ -2,10 +2,16 @@ package me.theo.recipeapp.services.impl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import me.theo.recipeapp.services.FilesService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +25,12 @@ public class FilesRecipeServiceImpl implements FilesService {
     @Value("${name.of.data.file}")
     private String dataFileName;
 
+    @Value("src/main/resources")
+    private  String fileTxtPath;
+
+    @Value("recipe.txt")
+    private String fileTxtName;
+
 
     @Override
     public boolean saveToFile(String json) {
@@ -29,6 +41,16 @@ public class FilesRecipeServiceImpl implements FilesService {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void addFileToServer(@RequestParam MultipartFile file) {
+//        filesRecipeServiceImpl.cleanDataFile();
+//        File dataFile = filesRecipeServiceImpl.getDataFile();
+        try (FileOutputStream fos = new FileOutputStream(getFileTxt())){
+            IOUtils.copy(file.getInputStream(), fos);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -57,8 +79,13 @@ public class FilesRecipeServiceImpl implements FilesService {
         }
 
     }
+
     @Override
     public File getDataFile() {
         return  new File(dataFilePath + "/" + dataFileName);
+    }
+
+    public File getFileTxt() {
+        return new File(fileTxtPath + "/" + fileTxtName);
     }
 }

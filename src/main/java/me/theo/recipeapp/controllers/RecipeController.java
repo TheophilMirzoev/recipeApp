@@ -59,7 +59,7 @@ public class RecipeController {
     public ResponseEntity<Recipe> getRecipe(@PathVariable Integer id) {
         Recipe recipe = recipeService.getRecipe(id);
         if (recipe == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(400).build();
         }
         return ResponseEntity.ok(recipe);
     }
