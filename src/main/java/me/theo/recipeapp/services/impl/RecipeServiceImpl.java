@@ -17,11 +17,13 @@ public class RecipeServiceImpl {
     private static int id;
     final private FilesRecipeServiceImpl filesRecipeServiceImpl;
     final private IngredientServiceImpl ingredientService;
+    private final ObjectMapper  objectMapper;
     private Map<Integer, Recipe> recipeMap = new HashMap<>();
 
-    public RecipeServiceImpl(FilesRecipeServiceImpl filesRecipeServiceImpl, IngredientServiceImpl ingredientService) {
+    public RecipeServiceImpl(FilesRecipeServiceImpl filesRecipeServiceImpl, IngredientServiceImpl ingredientService, ObjectMapper objectMapper) {
         this.filesRecipeServiceImpl = filesRecipeServiceImpl;
         this.ingredientService = ingredientService;
+        this.objectMapper = objectMapper;
     }
 
     @PostConstruct()
@@ -97,5 +99,20 @@ public class RecipeServiceImpl {
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
+    }
+    public void exportFileFromMemory(PrintWriter writer) throws IOException {
+        for (Recipe recipe : this.recipeMap.values()) {
+            writer.println(recipe.getRecipeName());
+            writer.println("время приготовления: %d минут".formatted(recipe.getCookingTime()));
+            writer.println("ингридиенты:");
+            for (Ingredient ingredient : recipe.getIngredientList()) {
+                writer.println("\t%s - %d %s".formatted(ingredient.getIngredientName(), ingredient.getWeight(), ingredient.getIngredientName()));
+            }
+            writer.println("инструкция");
+            for (int i = 0; i < recipe.getCookingSteps().size(); i++) {
+                writer.println("%d. %s".formatted(i + 1, recipe.getCookingSteps().get(i)));
+            }
+        }
+        writer.flush();
     }
 }
